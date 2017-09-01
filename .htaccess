@@ -1,0 +1,11 @@
+Options +SymLinksIfOwnerMatch
+RewriteEngine On
+
+# .htaccess file deffence
+<Files .htaccess>
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+#Redirect's all requests to this file:
+FallbackResource /route/route.php

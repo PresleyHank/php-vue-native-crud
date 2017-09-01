@@ -1,0 +1,21 @@
+{
+  "name": "alexeycrystal/php-vuejs2-native-crud",
+  "description": "PHP 7.1 / VueJS 2 native crud example",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Alexey Crystal",
+      "email": "alex.shabramov@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Controller\\": "app/controller/",
+      "Util\\": "app/util/",
+      "Entity\\": "app/entity/",
+      "Dao\\": "app/dao/",
+      "Route\\": "route/"
+    }
+  }
+}
