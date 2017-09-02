@@ -24,5 +24,14 @@ class LoginController
         }
         exit;
     }
+
+    public static function logout()
+    {
+        session_start();
+        if ($_SESSION['user']) {
+            session_destroy();
+            header('Location: /index.php');
+        }
+    }
 }
 

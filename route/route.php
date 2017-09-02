@@ -2,10 +2,9 @@
 
 namespace Route;
 
-use Controller\LoginController;
-use Controller\RegistrationController;
 use Util\Constants;
 
+require_once('../app/util/reflect.php');
 require_once('../vendor/autoload.php');
 require_once('../app/util/views.php');
 
@@ -26,16 +25,9 @@ if ($_GET) {
         header(Constants::REDIRECT_TO_INDEX_HEADER);
         die();
     }
-    $route = $_POST["route"];
-    if (isset($route) && array_key_exists($route, $pages)) {
-        if (isset($route)) {
-
-            if ($route == 'login') {
-                LoginController::login();
-            } else if ($route == 'registration') {
-                RegistrationController::registerUser();
-            }
-        }
+    $action = $_POST['action'];
+    if (isset($action) && array_key_exists($action, $actions)) {
+        call_user_func($actions[$action]);
     } else {
         errorPageNotFound();
     }
@@ -45,7 +37,8 @@ if ($_GET) {
 
 function errorPageNotFound()
 {
-    header(Constants::REDIRECT_TO_ERROR_HEADER);
+    header('Content-Type: application/json');
+    echo json_encode(array('error' => 'Произошла неизвестная ошибка, попробуйте позднее.'));
     die();
 }
 
