@@ -16,13 +16,18 @@ var app = new Vue({
         getAllGroups: function () {
             axios.get('../../route/route.php?action=listAllGroups')
                 .then(function (response) {
-                    if (response.data.error) {
-                        app.errorMessage = response.data.error;
-                    } else {
-
+                    console.log(response.data);
+                    if (response.data !== "") {
+                        if (response.data.error) {
+                            app.errorMessage = response.data.error;
+                        } else {
+                            app.groups = response.data;
+                        }
                     }
-                    console.log(response);
                 });
+        },
+        saveGroup: function () {
+
         }
     }
 });

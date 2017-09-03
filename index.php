@@ -26,10 +26,10 @@
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>Баба</td>
-                <td>httpksldakldkas</td>
+            <tr v-for="group in groups">
+                <td>{{group.id}}</td>
+                <td>{{group.title}}</td>
+                <td>{{group.imageLink}}</td>
                 <td>
                     <button @click="showingEditModal = true;">Edit</button>
                 </td>

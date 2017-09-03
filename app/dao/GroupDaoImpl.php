@@ -85,29 +85,20 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
         }
     }
 
-    function listAllByUser(int $userId): array
+    function listAllByUser(int $userId): string
     {
-        $groups = array();
         try {
             $pdo = $this->connect();
             $stmt = $pdo->prepare(self::SELECT_ALL_GROUPS_BY_USER_ID);
             $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
-                $result = $stmt->fetchAll();
-                foreach ($result as $row) {
-                    $group = New Group();
-                    $group->setId($row['id']);
-                    $group->setUserId($row['id_user']);
-                    $group->setTitle($row['title']);
-                    $group->setImageLink($row['imageLink']);
-                    $groups[] = $group;
-                }
+                return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
             }
         } finally {
             $this->disconnect();
         }
-        return $groups;
+        return "";
     }
 
     function listAll(): string
@@ -122,6 +113,6 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
         } finally {
             $this->disconnect();
         }
-        return null;
+        return "";
     }
 }

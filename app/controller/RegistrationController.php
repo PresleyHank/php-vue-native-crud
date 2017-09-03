@@ -10,7 +10,13 @@ use Util\FormValidator;
 
 class RegistrationController
 {
-    public static function registerUser()
+    public static function getRegistration()
+    {
+        header('Location: ' . Constants::REGISTRATION_PAGE_LOCATION);
+        die();
+    }
+
+    public static function postRegistration()
     {
         session_start();
         $errorList = array();

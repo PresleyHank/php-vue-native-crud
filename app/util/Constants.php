@@ -37,4 +37,6 @@ class Constants
     const USER_NOT_EXISTS = 'User with such username and password does not exists or password is incorrect. Check your input and try again.';
 
     const ERROR_CAUSED_NO_INFO = 'WARNING! There is a serious server error occurred! Try again later.';
+
+    const ERROR_CAUSED = 'Unknown error occurs! Try again later.';
 }

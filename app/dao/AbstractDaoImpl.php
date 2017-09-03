@@ -7,7 +7,7 @@ use PDO;
 abstract class AbstractDaoImpl implements AbstractDao
 {
     private static $connection = null;
-    private $dbName = 'php_auth_task';
+    private $dbName = 'php_vuejs2_native_crud';
     private $dbHost = 'localhost';
     private $dbUsername = 'root';
     private $dbUserPassword = '111111';

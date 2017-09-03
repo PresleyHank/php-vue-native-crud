@@ -9,7 +9,13 @@ use Util\FormValidator;
 
 class LoginController
 {
-    public static function login()
+    public static function getLogin()
+    {
+        header('Location: ' . Constants::LOGIN_PAGE_LOCATION);
+        die();
+    }
+
+    public static function postLogin()
     {
         session_start();
         $userDao = New UserDaoImpl();

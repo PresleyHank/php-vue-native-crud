@@ -14,7 +14,7 @@ interface GroupDao
 
     function delete(Group $obj): bool;
 
-    function listAllByUser(int $userId): array;
+    function listAllByUser(int $userId): string;
 
     function listAll(): string;
 }

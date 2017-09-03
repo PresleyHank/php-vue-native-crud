@@ -1,5 +1,7 @@
 <?php
 
+namespace Controller;
+
 use Dao\GroupDaoImpl;
 
 class GroupController
@@ -24,6 +26,6 @@ class GroupController
         session_start();
         $groupDao = New GroupDaoImpl();
         header('Content-Type: application/json;charset=utf-8');
-        return $groupDao->listAll();
+        echo $groupDao->listAll();
     }
 }
