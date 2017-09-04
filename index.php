@@ -58,7 +58,6 @@
                         <th>:</th>
                         <th><input type="text" name="" v-model="newGroup.imageLink"></input></th>
                     </tr>
-                    <input type="hidden" name="id_user" value="" v-model="newGroup.id_user"/>
 
                     <tr>
                         <th></th>

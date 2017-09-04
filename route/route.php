@@ -9,24 +9,25 @@ require_once('../app/util/reflect.php');
 require_once('../app/util/views.php');
 
 session_start();
-if ($_GET) {
+if (isset($_GET['action'])) {
     $action = $_GET['action'];
     if (isset($_SESSION['user']) && in_array($action, $excludesForLoggedIn)) {
         header(Constants::REDIRECT_TO_INDEX_HEADER);
         die();
     }
-    if (isset($action) && array_key_exists($action, $getActions)) {
+    if (array_key_exists($action, $getActions)) {
         call_user_func($getActions[$action]);
     } else {
         errorPageNotFound();
     }
-} elseif ($_POST) {
+} elseif (isset($_POST['action'])) {
+    $_SESSION['user'] = 1;
     if (!isset($_SESSION['user'])) {
         header(Constants::REDIRECT_TO_INDEX_HEADER);
         die();
     }
     $action = $_POST['action'];
-    if (isset($action) && array_key_exists($action, $postActions)) {
+    if (array_key_exists($action, $postActions)) {
         call_user_func($postActions[$action]);
     } else {
         errorPageNotFound();

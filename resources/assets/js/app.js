@@ -8,7 +8,7 @@ var app = new Vue({
         successMessage: "",
         sessionUser: {userId: ""},
         groups: [],
-        newGroup: {id_user: "", title: "", imageLink: ""},
+        newGroup: {id_user: "", title: "", imageLink: "", action: ""},
         newUser: {username: "", email: "", password: ""}
     },
     mounted: function () {
@@ -34,7 +34,7 @@ var app = new Vue({
         },
         registration: function () {
             var formData = app.toFormData(app.newUser);
-            axios.post('../../route/route.php?action=addGroup', formData)
+            axios.post('../../route/route.php?action=registration', formData)
                 .then(function (response) {
                     app.newUser = {username: "", email: "", password: ""};
                     if (response.data !== "") {
@@ -79,10 +79,13 @@ var app = new Vue({
                 });
         },
         saveGroup: function () {
+            console.log(app.newGroup);
+            app.newGroup.id_user = "1";
+            app.newGroup.action = "addGroup";
             var formData = app.toFormData(app.newGroup);
-            axios.post('../../route/route.php?action=addGroup', formData)
+            axios.post('../../route/route.php', formData)
                 .then(function (response) {
-                    app.newGroup = {id_user: "", title: "", imageLink: ""};
+                    app.newGroup = {id_user: "", title: "", imageLink: "", action: ""};
                     if (response.data !== "") {
                         if (response.data.error) {
                             app.errorMessage = response.data.error;
