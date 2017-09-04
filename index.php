@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="resources/assets/css/style.css">
+    <link rel="stylesheet" href="http://localhost:8080/resources/assets/css/style.css">
 </head>
 <body>
 <div id="root">
@@ -51,18 +51,20 @@
                     <tr>
                         <th>Title</th>
                         <th>:</th>
-                        <th><input type="text" name=""></input></th>
+                        <th><input type="text" name="" v-model="newGroup.title"></input></th>
                     </tr>
                     <tr>
                         <th>Image link</th>
                         <th>:</th>
-                        <th><input type="text" name=""></input></th>
+                        <th><input type="text" name="" v-model="newGroup.imageLink"></input></th>
                     </tr>
+                    <input type="hidden" name="id_user" value="" v-model="newGroup.id_user"/>
+
                     <tr>
                         <th></th>
                         <th></th>
                         <th>
-                            <button @click="showingAddModal = false;">Save</button>
+                            <button @click="showingAddModal = false; saveGroup();">Save</button>
                         </th>
                     </tr>
                 </table>
@@ -81,13 +83,14 @@
                     <tr>
                         <th>Title</th>
                         <th>:</th>
-                        <th><input type="text" name=""></input></th>
+                        <th><input type="text" name="" v-model="newGroup.title"></input></th>
                     </tr>
                     <tr>
                         <th>Image link</th>
                         <th>:</th>
-                        <th><input type="text" name=""></input></th>
+                        <th><input type="text" name="" v-model="newGroup.imageLink"></input></th>
                     </tr>
+                    <input type="hidden" name="id_user" value="" v-model="newGroup.id_user"/>
                     <tr>
                         <th></th>
                         <th></th>
@@ -107,8 +110,8 @@
                 <div class="clear"></div>
             </div>
             <div class="modalContent">
-                <p>You are goung to delete...</p>
-                <br><br><br><br>
+                <p>You are going to delete...</p>
+                <br>
                 <button @click="showingDeleteModal = false;">Yes</button>
                 <button @click="showingDeleteModal = false;">No</button>
             </div>
@@ -118,6 +121,6 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
 
-<script type="text/javascript" src="resources/assets/js/app.js"></script>
+<script type="text/javascript" src="http://localhost:8080/resources/assets/js/app.js"></script>
 </body>
 </html>

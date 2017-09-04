@@ -11,5 +11,5 @@ $postActions = array(
     'registration' => 'RegistrationController::postRegistration',
     'addGroup' => 'GroupController::addGroup',
     'replaceGroup' => 'GroupController::replaceGroup',
-    'updateGroup' => 'GroupController::updateGroup',
+    'saveGroup' => 'GroupController::updateGroup',
 );
