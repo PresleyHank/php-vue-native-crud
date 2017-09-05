@@ -6,7 +6,7 @@ namespace Dao;
 use Entity\Group;
 use Exception;
 use PDO;
-use PDOStatement;
+use Util\Constants;
 
 class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
 {
@@ -21,7 +21,7 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
     private const UPDATE_GROUP = 'UPDATE ' . self::DB_TABLE .
     ' SET `id_user`=:userId, `title`=:title, `imageLink`=:imageLink WHERE `id`=:id;';
 
-    function get(int $id): ?Group
+    function get(int $id): string
     {
         try {
             $pdo = $this->connect();
@@ -29,23 +29,14 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
-                return $this->fetchGroup($stmt);
+                return json_encode($stmt->fetch(PDO::FETCH_ASSOC));
             }
+        } catch (Exception $e) {
+            $this->errorTrackingInfo(Constants::ERROR_GROUP_GET);
         } finally {
             $this->disconnect();
         }
-        return null;
-    }
-
-    private function fetchGroup(PDOStatement $stmt): Group
-    {
-        $group = New Group();
-        $group->setId($stmt->fetchColumn(0));
-        $group->setUserId($stmt->fetchColumn(1));
-        $group->setTitle($stmt->fetchColumn(2));
-        $group->setImageLink($stmt->fetchColumn(3));
-        $stmt = null;
-        return $group;
+        return "";
     }
 
     function save(Group $group): int
@@ -63,26 +54,33 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
             $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
             $stmt->bindParam(':title', $title, PDO::PARAM_STR);
             $stmt->bindParam(':imageLink', $imageLink, PDO::PARAM_STR);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $id = $stmt->execute() ? $pdo->lastInsertId() : -1;
             $pdo->commit();
         } catch (Exception $e) {
+            echo $e->getMessage();
+            die();
             $pdo->rollBack();
+            $this->errorTrackingInfo(Constants::ERROR_GROUP_SAVE);
         } finally {
             $this->disconnect();
         }
         return $id;
     }
 
-    function delete(Group $group): bool
+    function delete(int $groupId): bool
     {
         try {
             $pdo = $this->connect();
-            $stmt = $pdo->prepare(self::REMOVE_USER);
-            $stmt->bindParam(':id', $group->getId(), PDO::PARAM_INT);
+            $stmt = $pdo->prepare(self::DELETE_GROUP);
+            $stmt->bindParam(':id', $groupId, PDO::PARAM_INT);
             return $stmt->execute();
+        } catch (Exception $e) {
+            $this->errorTrackingInfo(Constants::ERROR_GROUP_DELETE);
         } finally {
             $this->disconnect();
         }
+        return true;
     }
 
     function listAllByUser(int $userId): string
@@ -95,6 +93,8 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
             if ($stmt->rowCount() > 0) {
                 return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
             }
+        } catch (Exception $e) {
+            $this->errorTrackingInfo(Constants::ERROR_GROUP_LIST_ALL_BY_USER);
         } finally {
             $this->disconnect();
         }
@@ -110,6 +110,8 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
             if ($stmt->rowCount() > 0) {
                 return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
             }
+        } catch (Exception $e) {
+            $this->errorTrackingInfo(Constants::ERROR_GROUP_LIST_ALL);
         } finally {
             $this->disconnect();
         }

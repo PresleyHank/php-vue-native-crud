@@ -3,6 +3,7 @@
 namespace Dao;
 
 use PDO;
+use Util\Constants;
 
 abstract class AbstractDaoImpl implements AbstractDao
 {
@@ -28,5 +29,19 @@ abstract class AbstractDaoImpl implements AbstractDao
     public function disconnect()
     {
         $this->connection = null;
+    }
+
+    public function errorTrackingInfo(string $errorMessage = Constants::ERROR_CAUSED)
+    {
+        header('Content-Type: application/json');
+        echo json_encode(array('error' => $errorMessage));
+        die();
+    }
+
+    public function successInfo(string $successMessage = "1")
+    {
+        header('Content-Type: application/json');
+        echo json_encode(array('success' => $successMessage));
+        die();
     }
 }

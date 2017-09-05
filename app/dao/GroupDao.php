@@ -8,11 +8,11 @@ use Entity\Group;
 
 interface GroupDao
 {
-    function get(int $id): ?Group;
+    function get(int $id): string;
 
     function save(Group $obj): int;
 
-    function delete(Group $obj): bool;
+    function delete(int $groupId): bool;
 
     function listAllByUser(int $userId): string;
 

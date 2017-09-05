@@ -7,9 +7,8 @@ $getActions = array(
 );
 
 $postActions = array(
-    'login' => 'LoginController::postLogin',
-    'registration' => 'RegistrationController::postRegistration',
-    'addGroup' => 'GroupController::addGroup',
-    'replaceGroup' => 'GroupController::replaceGroup',
-    'saveGroup' => 'GroupController::updateGroup',
+    'login' => 'Controller\LoginController::postLogin',
+    'registration' => 'Controller\RegistrationController::postRegistration',
+    'replaceGroup' => 'Controller\GroupController::replaceGroup',
+    'saveGroup' => 'Controller\GroupController::saveGroup'
 );

@@ -56,4 +56,45 @@ class FormValidator
         }
         return $user;
     }
+
+    public static function &validateGroup(array &$errorList): array
+    {
+        $id_user = $_POST['id_user'];
+        $title = $_POST['title'];
+        $imageLink = $_POST['imageLink'];
+        if (!isset($id_user)) {
+            array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_NOT_SET);
+        } elseif ($id_user === "") {
+            array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_EMPTY);
+        } elseif (!is_numeric($id_user)) {
+            array_push($errorList, Constants::ERROR_GROUP_USER_ID_NOT_A_NUMBER);
+        }
+        if (!isset($title) || $title === "") {
+            array_push($errorList, Constants::ERROR_GROUP_TITLE_EMPTY);
+        }
+        if (!isset($imageLink) || $imageLink === "") {
+            array_push($errorList, Constants::ERROR_GROUP_IMAGE_LINK);
+        }
+        return $errorList;
+    }
+
+    public static function validateGroupDeletion(array &$errorList)
+    {
+        $groupID = $_POST['id'];
+        $sessionUserId = $_POST['id_user'];
+        if (!isset($sessionUserId)) {
+            array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_NOT_SET);
+        } elseif ($sessionUserId === "") {
+            array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_EMPTY);
+        } elseif (!is_numeric($sessionUserId)) {
+            array_push($errorList, Constants::ERROR_GROUP_USER_ID_NOT_A_NUMBER);
+        }
+        if (!isset($groupID) || $groupID === "") {
+            array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_NOT_SET);
+
+        } elseif (is_numeric($groupID)) {
+            array_push($errorList, Constants::ERROR_GROUP_ID_NOT_A_NUMBER);
+        }
+        return $errorList;
+    }
 }

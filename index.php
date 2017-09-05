@@ -31,10 +31,10 @@
                 <td>{{group.title}}</td>
                 <td>{{group.imageLink}}</td>
                 <td>
-                    <button @click="showingEditModal = true;">Edit</button>
+                    <button @click="showingEditModal = true; selectGroup(group)">Edit</button>
                 </td>
                 <td>
-                    <button @click="showingDeleteModal = true;">Delete</button>
+                    <button @click="showingDeleteModal = true; selectGroup(group)">Delete</button>
                 </td>
             </tr>
         </table>
@@ -58,12 +58,11 @@
                         <th>:</th>
                         <th><input type="text" name="" v-model="newGroup.imageLink"></input></th>
                     </tr>
-
                     <tr>
                         <th></th>
                         <th></th>
                         <th>
-                            <button @click="showingAddModal = false; saveGroup();">Save</button>
+                            <button type="submit" @click="showingAddModal = false; saveGroup();">Save</button>
                         </th>
                     </tr>
                 </table>
@@ -82,19 +81,18 @@
                     <tr>
                         <th>Title</th>
                         <th>:</th>
-                        <th><input type="text" name="" v-model="newGroup.title"></input></th>
+                        <th><input type="text" name="" v-model="clickedGroup.title"></input></th>
                     </tr>
                     <tr>
                         <th>Image link</th>
                         <th>:</th>
-                        <th><input type="text" name="" v-model="newGroup.imageLink"></input></th>
+                        <th><input type="text" name="" v-model="clickedGroup.imageLink"></input></th>
                     </tr>
-                    <input type="hidden" name="id_user" value="" v-model="newGroup.id_user"/>
                     <tr>
                         <th></th>
                         <th></th>
                         <th>
-                            <button @click="showingEditModal = false;">Update</button>
+                            <button @click="showingEditModal = false; updateGroup()">Update</button>
                         </th>
                     </tr>
                 </table>
@@ -104,21 +102,21 @@
     <div id="deleteModal" class="modal" v-if="showingDeleteModal">
         <div class="modalContainer">
             <div class="modalHeading">
-                <p class="fleft">Delete group</p>
+                <p class="fleft">Are you sure? </p>
                 <button class="fright close" @click="showingDeleteModal = false;">X</button>
                 <div class="clear"></div>
             </div>
             <div class="modalContent">
-                <p>You are going to delete...</p>
+                <p>You are going to delete group "{{clickedGroup.title}}"...</p>
                 <br>
-                <button @click="showingDeleteModal = false;">Yes</button>
+                <button @click="showingDeleteModal = false; deleteGroup();">Yes</button>
                 <button @click="showingDeleteModal = false;">No</button>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
 
 <script type="text/javascript" src="http://localhost:8080/resources/assets/js/app.js"></script>
 </body>

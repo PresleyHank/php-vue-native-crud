@@ -39,4 +39,29 @@ class Constants
     const ERROR_CAUSED_NO_INFO = 'WARNING! There is a serious server error occurred! Try again later.';
 
     const ERROR_CAUSED = 'Unknown error occurs! Try again later.';
+    const ERROR_GET_PATH_NOT_FOUND = 'There is no path that you have selected. Try to choose other location.';
+    const ERROR_POSTING_DATA = 'Information is not saved. Try again later.';
+
+    /*
+     * Group validation messages
+     */
+    const ERROR_GROUP_USER_ID_IS_NOT_SET = "Group user's session id is not set.";
+    const ERROR_GROUP_USER_ID_IS_EMPTY = "Group nuser's session id is an empty string";
+    const ERROR_GROUP_USER_ID_NOT_A_NUMBER = 'Group user id is not a number';
+    const ERROR_GROUP_USER_ID_NOT_EQUALS_TO_OWNER = 'Group user id is not equal to owner. You are trying to modify the group of not your own.';
+    const ERROR_GROUP_ID_NOT_A_NUMBER = "Group id is not a number.";
+    const ERROR_GROUP_TITLE_EMPTY = 'Group title is empty or not set.';
+    const ERROR_GROUP_IMAGE_LINK = 'Group image link es empty or not set.';
+
+    /*
+     * Group dao exception messages
+     */
+    const ERROR_GROUP_SAVE = 'Group savings error occurs.';
+    const ERROR_GROUP_GET = 'Cannot save group. Something does wrong with database.';
+    const ERROR_GROUP_DELETE = 'Group delete is impossible. Some error occurs in the database.';
+    const ERROR_GROUP_LIST_ALL = 'Cannot get a list of all groups. Some error occurs in the database.';
+    const ERROR_GROUP_LIST_ALL_BY_USER = 'Cannot get a list of groups by user. Some error occurs in the database.';
+
+    const SUCCESS_GROUP_SAVED = 'Success! Group is saved.';
+    const SUCCESS_GROUP_IS_DELETED = 'Success! Group was deleted.';
 }
