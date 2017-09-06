@@ -28,7 +28,6 @@ class LoginController
             $_SESSION['user'] = $user->getId();
             header(Constants::REDIRECT_TO_INDEX_HEADER);
         }
-        exit;
     }
 
     public static function logout()

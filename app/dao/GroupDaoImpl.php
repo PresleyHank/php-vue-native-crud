@@ -54,12 +54,12 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
             $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
             $stmt->bindParam(':title', $title, PDO::PARAM_STR);
             $stmt->bindParam(':imageLink', $imageLink, PDO::PARAM_STR);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            if ($group->getId() > 0) {
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            }
             $id = $stmt->execute() ? $pdo->lastInsertId() : -1;
             $pdo->commit();
         } catch (Exception $e) {
-            echo $e->getMessage();
-            die();
             $pdo->rollBack();
             $this->errorTrackingInfo(Constants::ERROR_GROUP_SAVE);
         } finally {

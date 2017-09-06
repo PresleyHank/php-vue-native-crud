@@ -4,8 +4,57 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="http://localhost:8080/resources/assets/css/style.css">
+    <link rel="stylesheet" href="http://localhost:8080/resources/assets/css/loginAndRegistrationModal.css">
 </head>
 <body>
+<div id="header">
+
+    <div id="fake-nav" v-show="!authenticated">
+        <div v-show="!authenticated">
+            <a href="#login" @click="open('login', $event);">Login</a>
+            <a href="#register" @click="open('registration', $event);">Register</a>
+        </div>
+        <div v-if="authenticated">
+            <a href="#logout" @click="">Logout</a>
+        </div>
+    </div>
+
+    <div id="login-modal" class="user-modal-container" :class="{'active': active}" @click="close">
+        <div class="user-modal">
+            <ul class="form-switcher">
+                <li><a href="" @click="flip('registration', $event);" id="register-form">Register</a>
+
+                </li>
+                <li><a href="" @click="flip('login', $event);" id="login-form">Login</a>
+
+                </li>
+            </ul>
+            <div class="form-register" id="form-register" :class="{'active': active == 'registration'}">
+                <div class="error-message"></div>
+                <input type="text" name="name" placeholder="Name">
+                <input type="email" name="email" placeholder="Email">
+                <input type="password" name="password" placeholder="Password">
+                <input type="submit" id="registerSubmit">
+                <div class="links"><a href="" @click="flip('login', $event);">Already have an account?</a>
+                </div>
+            </div>
+            <div class="form-login" id="form-login" :class="{'active': active == 'login'}">
+                <div class="error-message"></div>
+                <input type="text" name="user" placeholder="Email or Username">
+                <input type="password" name="password" placeholder="Password">
+                <input type="submit" id="loginSubmit">
+                <div class="links"><a href="" @click="flip('password', $event);">Forgot your password?</a>
+                </div>
+            </div>
+            <div class="form-password" id="form-password" :class="{'active': active == 'password'}">
+                <div class="error-message"></div>
+                <input type="text" name="email" placeholder="Email">
+                <input type="submit" id="passwordSubmit">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="root">
     <div class="container">
         <h1 class="fleft">List of groups</h1>

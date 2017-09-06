@@ -1,4 +1,99 @@
-var app = new Vue({
+var header = new Vue({
+    el: '#fake-nav',
+    data: {
+        authenticated: false
+    },
+    methods: {
+        open: function (which, e) {
+            e.preventDefault();
+            signInUpModal.active = which;
+        }
+    }
+});
+
+var signInUpModal = new Vue({
+    el: '#login-modal',
+    data: {
+        active: null,
+        sessionUserId: "",
+        userLogin: {action: "", login: "", password: ""},
+        userRegistration: {action: "", username: "", email: "", password: ""}
+    },
+    methods: {
+        login: function () {
+            signInUpModal.userLogin.action = "login";
+            axios.post('../../route/route.php', JSON.stringify(signInUpModal.userLogin))
+                .then(function (response) {
+                    signInUpModal.clearUserLogin();
+                    if (response.data !== "") {
+                        if (response.data.error) {
+                            groupManagerModule.errorMessage = response.data.error;
+                        } else {
+                            if (groupManagerModule.sessionUser.userId !== "" && response.data.userId !== "") {
+                                groupManagerModule.sessionUser.userId = response.data.userId
+                            } else {
+                                groupManagerModule.errorMessage = 'Undefined login error occurs. Try again later.';
+                            }
+                        }
+                    }
+                });
+        },
+        registration: function () {
+            signInUpModal.userRegistration = "registration";
+            axios.post('../../route/route.php', JSON.stringify(signInUpModal.userRegistration))
+                .then(function (response) {
+                    signInUpModal.clearUserRegistration();
+                    if (response.data !== "") {
+                        if (response.data.error) {
+                            groupManagerModule.errorMessage = response.data.error;
+                        } else {
+                            if (groupManagerModule.sessionUser.userId !== "" && response.data.userId !== "") {
+                                groupManagerModule.sessionUser.userId = response.data.userId
+                            } else {
+                                groupManagerModule.errorMessage = 'Undefined registration error occurs. Try again later.';
+                            }
+                        }
+                    }
+                });
+        },
+        logout: function () {
+            axios.get('../../route/route.php?action=logout')
+                .then(function (response) {
+                    if (response.data !== "") {
+                        if (response.data.error) {
+                            groupManagerModule.errorMessage = response.data.error;
+                        } else {
+                            if (response.data.userId !== "") {
+                                groupManagerModule.sessionUser.userId = "";
+                            } else {
+                                groupManagerModule.errorMessage = 'Undefined login error occurs. Try again later.';
+                            }
+                        }
+                    }
+                });
+        },
+        flip: function (which, e) {
+            e.preventDefault();
+            if (which !== this.active) {
+                this.active = which;
+            }
+        },
+        close: function (e) {
+            e.preventDefault();
+            if (e.target === this.$el) {
+                this.active = null;
+            }
+        },
+        clearUserRegistration: function () {
+            signInUpModal.userRegistration = {action: "", username: "", email: "", password: ""}
+        },
+        clearUserLogin: function () {
+            signInUpModal.userLogin = {action: "", login: "", password: ""};
+        }
+    }
+});
+
+var groupManagerModule = new Vue({
     el: '#root',
     data: {
         showingAddModal: false,
@@ -6,6 +101,7 @@ var app = new Vue({
         showingDeleteModal: false,
         errorMessage: "",
         successMessage: "",
+        authenticated: true,
         sessionUser: {userId: "1"}, // Here must to be a php user's id !!!
         groups: [],
         newGroup: {id: "", id_user: "", title: "", imageLink: "", action: ""},
@@ -17,142 +113,92 @@ var app = new Vue({
         this.getAllGroups();
     },
     methods: {
-        login: function () {
-            axios.get('../../route/route.php?action=login')
-                .then(function (response) {
-                    if (response.data !== "") {
-                        if (response.data.error) {
-                            app.errorMessage = response.data.error;
-                        } else {
-                            if (app.sessionUser.userId !== "" && response.data.userId !== "") {
-                                app.sessionUser.userId = response.data.userId
-                            } else {
-                                app.errorMessage = 'Undefined login error occurs. Try again later.';
-                            }
-                        }
-                    }
-                });
-        },
-        registration: function () {
-            var formData = app.toFormData(app.newUser);
-            axios.post('../../route/route.php?action=registration', formData)
-                .then(function (response) {
-                    app.newUser = {username: "", email: "", password: ""};
-                    if (response.data !== "") {
-                        if (response.data.error) {
-                            app.errorMessage = response.data.error;
-                        } else {
-                            if (app.sessionUser.userId !== "" && response.data.userId !== "") {
-                                app.sessionUser.userId = response.data.userId
-                            } else {
-                                app.errorMessage = 'Undefined registration error occurs. Try again later.';
-                            }
-                        }
-                    }
-                });
-        },
-        logout: function () {
-            axios.get('../../route/route.php?action=login')
-                .then(function (response) {
-                    if (response.data !== "") {
-                        if (response.data.error) {
-                            app.errorMessage = response.data.error;
-                        } else {
-                            if (response.data.userId !== "") {
-                                app.sessionUser.userId = "";
-                            } else {
-                                app.errorMessage = 'Undefined login error occurs. Try again later.';
-                            }
-                        }
-                    }
-                });
-        },
         getAllGroups: function () {
             axios.get('../../route/route.php?action=listAllGroups')
                 .then(function (response) {
                     if (response.data !== "") {
                         if (response.data.error) {
-                            app.errorMessage = response.data.error;
+                            groupManagerModule.errorMessage = response.data.error;
                         } else {
-                            app.groups = response.data;
+                            groupManagerModule.groups = response.data;
                         }
                     }
                 });
         },
         saveGroup: function () {
-            app.newGroup.id_user = app.sessionUser.userId; // Here must to be a php user's id !!!
-            app.newGroup.action = "saveGroup";
-            axios.post('/route/route.php', app.newGroup)
+            groupManagerModule.newGroup.id_user = groupManagerModule.sessionUser.userId; // Here must to be a php user's id !!!
+            groupManagerModule.newGroup.action = "saveGroup";
+            axios.post('/route/route.php', JSON.stringify(groupManagerModule.newGroup))
                 .then(function (response) {
                     console.log(response.data);
-                    app.clearGroup();
+                    groupManagerModule.clearGroup();
                     if (response.data !== "") {
                         if (response.data.error) {
-                            app.errorMessage = response.data.error;
+                            groupManagerModule.errorMessage = response.data.error;
                         } else {
-                            app.getAllGroups();
+                            groupManagerModule.getAllGroups();
                         }
                     } else {
-                        app.errorMessage = 'Something goes wrong. The server response is empty.';
+                        groupManagerModule.errorMessage = 'Something goes wrong. The server response is empty.';
                     }
                 });
         },
         updateGroup: function () {
-            app.clickedGroup.id_user = app.sessionUser.userId; // Here must to be a php user's id !!!
-            app.clickedGroup.action = "saveGroup";
-            axios.post('/route/route.php', app.clickedGroup)
+            groupManagerModule.clickedGroup.id_user = groupManagerModule.sessionUser.userId; // Here must to be a php user's id !!!
+            groupManagerModule.clickedGroup.action = "saveGroup";
+            axios.post('/route/route.php', JSON.stringify(groupManagerModule.clickedGroup))
                 .then(function (response) {
                     console.log(response.data);
-                    app.clearGroup();
+                    groupManagerModule.clearGroup();
                     if (response.data !== "") {
                         if (response.data.error) {
-                            app.errorMessage = response.data.error;
+                            groupManagerModule.errorMessage = response.data.error;
                         } else {
-                            app.getAllGroups();
+                            groupManagerModule.getAllGroups();
                         }
                     } else {
-                        app.errorMessage = 'Something goes wrong. The server response is empty.';
+                        groupManagerModule.errorMessage = 'Something goes wrong. The server response is empty.';
                     }
                 });
         },
         deleteGroup: function () {
-            app.clickedGroup.id_user = app.sessionUser.userId;
-            app.clickedGroup.action = "replaceGroup";
-            axios.post('/route/route.php', app.clickedGroup)
+            groupManagerModule.clickedGroup.id_user = groupManagerModule.sessionUser.userId;
+            groupManagerModule.clickedGroup.action = "replaceGroup";
+            axios.post('/route/route.php', JSON.stringify(groupManagerModule.clickedGroup))
                 .then(function (response) {
                     console.log(response.data);
-                    app.clearGroup();
+                    groupManagerModule.clearGroup();
                     if (response.data !== "") {
                         if (response.data.error) {
-                            app.errorMessage = response.data.error;
+                            groupManagerModule.errorMessage = response.data.error;
                         } else {
-                            app.successMessage = response.data.success;
-                            app.getAllGroups();
+                            groupManagerModule.successMessage = response.data.success;
+                            groupManagerModule.getAllGroups();
                         }
                     } else {
-                        app.errorMessage = 'Something goes wrong. The server response is empty.';
+                        groupManagerModule.errorMessage = 'Something goes wrong. The server response is empty.';
                     }
                 });
         },
         selectGroup: function (group) {
-            app.clickedGroup = group;
+            groupManagerModule.clickedGroup = group;
         },
         toFormData: function (obj) {
-            var formData = new FormData(app.newGroup);
+            var formData = new FormData(groupManagerModule.newGroup);
             for (var key in obj) {
                 formData.append(key, obj[key]);
             }
             return formData;
         },
         clearMessage: function () {
-            app.errorMessage = "";
-            app.successMessage = "";
+            groupManagerModule.errorMessage = "";
+            groupManagerModule.successMessage = "";
         },
         clearSessionUser: function () {
-            app.sessionUser.userId = "";
+            groupManagerModule.sessionUser.userId = "";
         },
         clearGroup: function () {
-            app.newGroup = {id_user: "", title: "", imageLink: "", action: ""};
+            groupManagerModule.newGroup = {id_user: "", title: "", imageLink: "", action: ""};
         }
     }
 });
