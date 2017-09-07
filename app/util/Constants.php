@@ -16,7 +16,6 @@ class Constants
      * Headers values
      */
     const REDIRECT_TO_INDEX_HEADER = 'Location:/index.php';
-    const REDIRECT_TO_ERROR_HEADER = 'Location:/resources/views/errors/error.php';
 
     /*
      * Registration form error messages
@@ -36,9 +35,14 @@ class Constants
 
     const USER_NOT_EXISTS = 'User with such username and password does not exists or password is incorrect. Check your input and try again.';
 
+    const ERROR_USER_IS_NOT_IN_SESSION = "You can not logout because you are not in the session already.";
+    const ERROR_VUE_SESSION_ID_NOT_SET = "Vue session id is not set!";
+    const ERROR_VUE_SESSION_NOT_EQUAL_TO_CURRENT = "Vue session id is not equal to current server session. Access denied!";
+
     const ERROR_CAUSED_NO_INFO = 'WARNING! There is a serious server error occurred! Try again later.';
 
     const ERROR_CAUSED = 'Unknown error occurs! Try again later.';
+    const USER_IS_ALREADY_IN_SESSION = 'User is already in session. You can stop stop your current session by logout';
     const ERROR_GET_PATH_NOT_FOUND = 'There is no path that you have selected. Try to choose other location.';
     const ERROR_POSTING_DATA = 'Information is not saved. Try again later.';
 

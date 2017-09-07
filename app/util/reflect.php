@@ -1,12 +1,10 @@
 <?php
 $getActions = array(
-    'login' => 'Controller\LoginController::getLogin',
-    'registration' => 'Controller\RegistrationController::getRegistration',
-    'listAllGroups' => 'Controller\GroupController::listAllGroups',
-    'logout' => 'Controller\LoginController::logout'
+    'listAllGroups' => 'Controller\GroupController::listAllGroups'
 );
 
 $postActions = array(
+    'logout' => 'Controller\LoginController::logout',
     'login' => 'Controller\LoginController::postLogin',
     'registration' => 'Controller\RegistrationController::postRegistration',
     'replaceGroup' => 'Controller\GroupController::replaceGroup',

@@ -67,7 +67,6 @@ class UserDaoImpl extends AbstractDaoImpl implements UserDao
             $email = $user->getEmail();
             $password = $user->getPassword();
             $active = $user->isActive();
-            echo($userName . " " . $email . " " . $password . " " . $active);
             $stmt->bindParam(':username', $userName, PDO::PARAM_STR);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':password', $password, PDO::PARAM_STR);

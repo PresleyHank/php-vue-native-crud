@@ -57,6 +57,19 @@ class FormValidator
         return $user;
     }
 
+    public static function &validateLogOut(array &$errorList)
+    {
+        $vueSessionId = $_POST['userId'];
+        if (!isset($_SESSION['user'])) {
+            array_push($errorList, Constants::ERROR_USER_IS_NOT_IN_SESSION);
+        } else if (!isset($_POST['userId'])) {
+            array_push($errorList, Constants::ERROR_VUE_SESSION_ID_NOT_SET);
+        } else if ($vueSessionId !== $_SESSION['user']) {
+            array_push($errorList, Constants::ERROR_VUE_SESSION_NOT_EQUAL_TO_CURRENT);
+        }
+        return $errorList;
+    }
+
     public static function &validateGroup(array &$errorList): array
     {
         $id_user = $_POST['id_user'];
@@ -64,9 +77,9 @@ class FormValidator
         $imageLink = $_POST['imageLink'];
         if (!isset($id_user)) {
             array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_NOT_SET);
-        } elseif ($id_user === "") {
+        } else if ($id_user === "") {
             array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_EMPTY);
-        } elseif (!is_numeric($id_user)) {
+        } else if (!is_numeric($id_user)) {
             array_push($errorList, Constants::ERROR_GROUP_USER_ID_NOT_A_NUMBER);
         }
         if (!isset($title) || $title === "") {
@@ -84,15 +97,15 @@ class FormValidator
         $sessionUserId = $_POST['id_user'];
         if (!isset($sessionUserId)) {
             array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_NOT_SET);
-        } elseif ($sessionUserId === "") {
+        } else if ($sessionUserId === "") {
             array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_EMPTY);
-        } elseif (!is_numeric($sessionUserId)) {
+        } else if (!is_numeric($sessionUserId)) {
             array_push($errorList, Constants::ERROR_GROUP_USER_ID_NOT_A_NUMBER);
         }
         if (!isset($groupID) || $groupID === "") {
             array_push($errorList, Constants::ERROR_GROUP_USER_ID_IS_NOT_SET);
 
-        } elseif (is_numeric($groupID)) {
+        } else if (is_numeric($groupID)) {
             array_push($errorList, Constants::ERROR_GROUP_ID_NOT_A_NUMBER);
         }
         return $errorList;

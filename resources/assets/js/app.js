@@ -7,6 +7,9 @@ var header = new Vue({
         open: function (which, e) {
             e.preventDefault();
             signInUpModal.active = which;
+        },
+        logout: function () {
+            signInUpModal.logout();
         }
     }
 });
@@ -15,58 +18,75 @@ var signInUpModal = new Vue({
     el: '#login-modal',
     data: {
         active: null,
+        errors: [],
+        modalSuccessMessage: "",
         sessionUserId: "",
-        userLogin: {action: "", login: "", password: ""},
-        userRegistration: {action: "", username: "", email: "", password: ""}
+        userLogin: {action: "", usernameOrEmail: "", password: ""},
+        userLogout: {action: "", userId: ""},
+        userRegistration: {action: "", username: "", email: "", password: "", secondaryPassword: ""}
     },
     methods: {
         login: function () {
             signInUpModal.userLogin.action = "login";
-            axios.post('../../route/route.php', JSON.stringify(signInUpModal.userLogin))
+            axios.post("../../route/route.php", JSON.stringify(signInUpModal.userLogin))
                 .then(function (response) {
                     signInUpModal.clearUserLogin();
                     if (response.data !== "") {
+                        console.log(response);
                         if (response.data.error) {
-                            groupManagerModule.errorMessage = response.data.error;
-                        } else {
-                            if (groupManagerModule.sessionUser.userId !== "" && response.data.userId !== "") {
-                                groupManagerModule.sessionUser.userId = response.data.userId
-                            } else {
-                                groupManagerModule.errorMessage = 'Undefined login error occurs. Try again later.';
-                            }
+                            signInUpModal.errors = JSON.parse(response.data.error);
+                        } else if (response.data.userId) {
+                            header.authenticated = true;
+
+                            signInUpModal.sessionUserId = response.data.userId;
+                            signInUpModal.modalSuccessMessage = "Success login! Greetings!";
+
+                            groupManagerModule.sessionUser.userId = response.data.userId;
+                        }
+                        else {
+                            signInUpModal.modalErrorMessage = "Undefined login error occurs. Try again later.";
                         }
                     }
                 });
         },
         registration: function () {
-            signInUpModal.userRegistration = "registration";
-            axios.post('../../route/route.php', JSON.stringify(signInUpModal.userRegistration))
+            signInUpModal.userRegistration.action = "registration";
+            axios.post("../../route/route.php", JSON.stringify(signInUpModal.userRegistration))
                 .then(function (response) {
                     signInUpModal.clearUserRegistration();
                     if (response.data !== "") {
+                        console.log(response);
                         if (response.data.error) {
-                            groupManagerModule.errorMessage = response.data.error;
-                        } else {
-                            if (groupManagerModule.sessionUser.userId !== "" && response.data.userId !== "") {
-                                groupManagerModule.sessionUser.userId = response.data.userId
-                            } else {
-                                groupManagerModule.errorMessage = 'Undefined registration error occurs. Try again later.';
-                            }
+                            signInUpModal.errors = JSON.parse(response.data.error);
+                        } else if (response.data.userId) {
+                            header.authenticated = true;
+
+                            signInUpModal.sessionUserId = response.data.userId;
+                            signInUpModal.modalSuccessMessage = "Successful registration! Greetings!";
+
+                            groupManagerModule.sessionUser.userId = response.data.userId;
+                        }
+                        else {
+                            signInUpModal.modalErrorMessage = "Undefined registration error occurs. Try again later.";
                         }
                     }
                 });
         },
         logout: function () {
-            axios.get('../../route/route.php?action=logout')
+            signInUpModal.userLogout.userId = signInUpModal.sessionUserId;
+            signInUpModal.userLogout.action = "logout";
+            axios.post("../../route/route.php", JSON.stringify(signInUpModal.userLogout))
                 .then(function (response) {
+                    signInUpModal.clearUserLogout();
                     if (response.data !== "") {
                         if (response.data.error) {
                             groupManagerModule.errorMessage = response.data.error;
                         } else {
-                            if (response.data.userId !== "") {
+                            if (response.data.success) {
                                 groupManagerModule.sessionUser.userId = "";
+                                header.authenticated = false;
                             } else {
-                                groupManagerModule.errorMessage = 'Undefined login error occurs. Try again later.';
+                                groupManagerModule.errorMessage = "Undefined login error occurs. Try again later.";
                             }
                         }
                     }
@@ -85,10 +105,17 @@ var signInUpModal = new Vue({
             }
         },
         clearUserRegistration: function () {
-            signInUpModal.userRegistration = {action: "", username: "", email: "", password: ""}
+            signInUpModal.userRegistration = {action: "", username: "", email: "", password: "", secondaryPassword: ""};
         },
         clearUserLogin: function () {
-            signInUpModal.userLogin = {action: "", login: "", password: ""};
+            signInUpModal.userLogin = {action: "", usernameOrEmail: "", password: ""};
+        },
+        clearUserLogout: function () {
+            signInUpModal.userLogout = {action: "", userId: ""};
+        },
+        clearMessages: function () {
+            signInUpModal.modalSuccessMessage = "";
+            signInUpModal.errors = [];
         }
     }
 });
@@ -101,8 +128,7 @@ var groupManagerModule = new Vue({
         showingDeleteModal: false,
         errorMessage: "",
         successMessage: "",
-        authenticated: true,
-        sessionUser: {userId: "1"}, // Here must to be a php user's id !!!
+        sessionUser: {userId: ""},
         groups: [],
         newGroup: {id: "", id_user: "", title: "", imageLink: "", action: ""},
         newUser: {username: "", email: "", password: ""},
@@ -126,7 +152,7 @@ var groupManagerModule = new Vue({
                 });
         },
         saveGroup: function () {
-            groupManagerModule.newGroup.id_user = groupManagerModule.sessionUser.userId; // Here must to be a php user's id !!!
+            groupManagerModule.newGroup.id_user = groupManagerModule.sessionUser.userId;
             groupManagerModule.newGroup.action = "saveGroup";
             axios.post('/route/route.php', JSON.stringify(groupManagerModule.newGroup))
                 .then(function (response) {

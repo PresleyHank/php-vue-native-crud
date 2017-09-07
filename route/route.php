@@ -20,28 +20,26 @@ if (isset($_GET['action'])) {
     if (array_key_exists($action, $getActions)) {
         call_user_func($getActions[$action]);
     } else {
-        errorPageNotFound(Constants::ERROR_GET_PATH_NOT_FOUND);
+        errorOccurs(Constants::ERROR_GET_PATH_NOT_FOUND);
     }
 } elseif (isset($_POST['action'])) {
-    $_SESSION['user'] = 1;
     if (!isset($_SESSION['user'])) {
-        header(Constants::REDIRECT_TO_INDEX_HEADER);
-        die();
+        errorOccurs(Constants::USER_IS_ALREADY_IN_SESSION);
     }
     $action = $_POST['action'];
     if (array_key_exists($action, $postActions)) {
         call_user_func($postActions[$action]);
     } else {
-        errorPageNotFound(Constants::ERROR_POSTING_DATA);
+        errorOccurs(Constants::ERROR_POSTING_DATA);
     }
 } else {
-    errorPageNotFound();
+    errorOccurs();
 }
 
-function errorPageNotFound(string $errorMessage = Constants::ERROR_CAUSED)
+function errorOccurs(string $errorMessage = Constants::ERROR_CAUSED)
 {
     header('Content-Type: application/json');
-    echo json_encode(array('error' => $errorMessage));
+    echo json_encode(array('error' => json_encode(array($errorMessage))));
     die();
 }
 

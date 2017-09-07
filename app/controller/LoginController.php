@@ -3,18 +3,11 @@
 namespace Controller;
 
 use Dao\UserDaoImpl;
-use Util\Constants;
 use Util\FormValidator;
 
 
 class LoginController
 {
-    public static function getLogin()
-    {
-        header('Location: ' . Constants::LOGIN_PAGE_LOCATION);
-        die();
-    }
-
     public static function postLogin()
     {
         session_start();
@@ -23,19 +16,24 @@ class LoginController
         $user = FormValidator::validateLogin($errorList, $userDao);
         if (!empty($errorList)) {
             $_SESSION['errorList'] = $errorList;
-            header(Constants::REDIRECT_TO_INDEX_HEADER);
+            echo json_encode(array('error' => json_encode(array_values($errorList))));
         } else {
             $_SESSION['user'] = $user->getId();
-            header(Constants::REDIRECT_TO_INDEX_HEADER);
+            echo json_encode(array('userId' => $user->getId()));
         }
     }
 
     public static function logout()
     {
         session_start();
-        if ($_SESSION['user']) {
+        $errorList = array();
+        $errorList = FormValidator::validateLogOut($errorList);
+        if (!empty($errorList)) {
+            $_SESSION['errorList'] = $errorList;
+            echo json_encode(array('error' => json_encode(array_values($errorList))));
+        } else {
             session_destroy();
-            header('Location: /index.php');
+            echo json_encode(array('success' => "Success session logout."));
         }
     }
 }

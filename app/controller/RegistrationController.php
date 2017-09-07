@@ -10,12 +10,6 @@ use Util\FormValidator;
 
 class RegistrationController
 {
-    public static function getRegistration()
-    {
-        header('Location: ' . Constants::REGISTRATION_PAGE_LOCATION);
-        die();
-    }
-
     public static function postRegistration()
     {
         session_start();
@@ -23,8 +17,7 @@ class RegistrationController
         $userDao = New UserDaoImpl();
         $errorList = FormValidator::validateRegForm($errorList, $userDao);
         if (!empty($errorList)) {
-            $_SESSION['errorList'] = $errorList;
-            header(Constants::REDIRECT_TO_INDEX_HEADER);
+            echo json_encode(array('error' => json_encode(array_values($errorList))));
         } else {
             $user = New User();
             $user->setUserName($_POST['username']);
@@ -35,11 +28,10 @@ class RegistrationController
             if ($userId > 0) {
                 session_start();
                 $_SESSION['user'] = $userId;
-                header(Constants::REDIRECT_TO_INDEX_HEADER);
+                echo json_encode(array('userId' => $userId));
             } else {
-                $errorList[] = Constants::ERROR_CAUSED_NO_INFO;
-                $_SESSION['errorList'] = $errorList;
-                header(Constants::REDIRECT_TO_INDEX_HEADER);
+                array_push($errorList, Constants::ERROR_CAUSED_NO_INFO);
+                echo json_encode(array('error' => json_encode(array_values($errorList))));
             }
         }
     }
