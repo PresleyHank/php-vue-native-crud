@@ -42,7 +42,7 @@ class Constants
     const ERROR_CAUSED_NO_INFO = 'WARNING! There is a serious server error occurred! Try again later.';
 
     const ERROR_CAUSED = 'Unknown error occurs! Try again later.';
-    const USER_IS_ALREADY_IN_SESSION = 'User is already in session. You can stop stop your current session by logout';
+    const USER_IS_NOT_IN_SESSION = 'You must to login to have rights to edit table data information.';
     const ERROR_GET_PATH_NOT_FOUND = 'There is no path that you have selected. Try to choose other location.';
     const ERROR_POSTING_DATA = 'Information is not saved. Try again later.';
 

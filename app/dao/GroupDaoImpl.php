@@ -57,7 +57,15 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
             if ($group->getId() > 0) {
                 $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             }
-            $id = $stmt->execute() ? $pdo->lastInsertId() : -1;
+            if ($stmt->execute()) {
+                if ($group->getId() > 0) {
+                    $id = $group->getId();
+                } else if ($pdo->lastInsertId() > 0) {
+                    $id = $pdo->lastInsertId();
+                }
+            } else {
+                $id = -1;
+            }
             $pdo->commit();
         } catch (Exception $e) {
             $pdo->rollBack();
@@ -80,7 +88,7 @@ class GroupDaoImpl extends AbstractDaoImpl implements GroupDao
         } finally {
             $this->disconnect();
         }
-        return true;
+        return false;
     }
 
     function listAllByUser(int $userId): string

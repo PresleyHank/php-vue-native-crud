@@ -23,10 +23,10 @@ if (isset($_GET['action'])) {
         errorOccurs(Constants::ERROR_GET_PATH_NOT_FOUND);
     }
 } elseif (isset($_POST['action'])) {
-    if (!isset($_SESSION['user'])) {
-        errorOccurs(Constants::USER_IS_ALREADY_IN_SESSION);
-    }
     $action = $_POST['action'];
+    if (!isset($_SESSION['user']) && in_array($action, $excludesForLoggedOut)) {
+        errorOccurs(Constants::USER_IS_NOT_IN_SESSION);
+    }
     if (array_key_exists($action, $postActions)) {
         call_user_func($postActions[$action]);
     } else {

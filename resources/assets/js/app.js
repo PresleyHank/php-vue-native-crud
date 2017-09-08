@@ -126,8 +126,8 @@ var groupManagerModule = new Vue({
         showingAddModal: false,
         showingEditModal: false,
         showingDeleteModal: false,
-        errorMessage: "",
-        successMessage: "",
+        errorMessage: [],
+        successMessage: [],
         sessionUser: {userId: ""},
         groups: [],
         newGroup: {id: "", id_user: "", title: "", imageLink: "", action: ""},
@@ -144,8 +144,9 @@ var groupManagerModule = new Vue({
                 .then(function (response) {
                     if (response.data !== "") {
                         if (response.data.error) {
-                            groupManagerModule.errorMessage = response.data.error;
+                            groupManagerModule.errorMessage = JSON.parse(response.data.error);
                         } else {
+                            groupManagerModule.groups = [];
                             groupManagerModule.groups = response.data;
                         }
                     }
@@ -154,14 +155,15 @@ var groupManagerModule = new Vue({
         saveGroup: function () {
             groupManagerModule.newGroup.id_user = groupManagerModule.sessionUser.userId;
             groupManagerModule.newGroup.action = "saveGroup";
-            axios.post('/route/route.php', JSON.stringify(groupManagerModule.newGroup))
+            axios.post('../../route/route.php', JSON.stringify(groupManagerModule.newGroup))
                 .then(function (response) {
                     console.log(response.data);
                     groupManagerModule.clearGroup();
                     if (response.data !== "") {
                         if (response.data.error) {
-                            groupManagerModule.errorMessage = response.data.error;
-                        } else {
+                            groupManagerModule.errorMessage = JSON.parse(response.data.error);
+                        } else if (response.data.success) {
+                            groupManagerModule.successMessage = JSON.parse(response.data.success);
                             groupManagerModule.getAllGroups();
                         }
                     } else {
@@ -170,16 +172,19 @@ var groupManagerModule = new Vue({
                 });
         },
         updateGroup: function () {
-            groupManagerModule.clickedGroup.id_user = groupManagerModule.sessionUser.userId; // Here must to be a php user's id !!!
+            groupManagerModule.clickedGroup.id_user = groupManagerModule.sessionUser.userId;
             groupManagerModule.clickedGroup.action = "saveGroup";
-            axios.post('/route/route.php', JSON.stringify(groupManagerModule.clickedGroup))
+            axios.post('../../route/route.php', JSON.stringify(groupManagerModule.clickedGroup))
                 .then(function (response) {
                     console.log(response.data);
                     groupManagerModule.clearGroup();
                     if (response.data !== "") {
                         if (response.data.error) {
-                            groupManagerModule.errorMessage = response.data.error;
-                        } else {
+                            groupManagerModule.errorMessage = JSON.parse(response.data.error);
+                        } else if (response.data.success) {
+                            console.log("Deleted!");
+                            groupManagerModule.successMessage = JSON.parse(response.data.success);
+                            groupManagerModule.groups = [];
                             groupManagerModule.getAllGroups();
                         }
                     } else {
@@ -190,15 +195,15 @@ var groupManagerModule = new Vue({
         deleteGroup: function () {
             groupManagerModule.clickedGroup.id_user = groupManagerModule.sessionUser.userId;
             groupManagerModule.clickedGroup.action = "replaceGroup";
-            axios.post('/route/route.php', JSON.stringify(groupManagerModule.clickedGroup))
+            axios.post('../../route/route.php', JSON.stringify(groupManagerModule.clickedGroup))
                 .then(function (response) {
                     console.log(response.data);
                     groupManagerModule.clearGroup();
                     if (response.data !== "") {
                         if (response.data.error) {
-                            groupManagerModule.errorMessage = response.data.error;
+                            groupManagerModule.errorMessage = JSON.parse(response.data.error);
                         } else {
-                            groupManagerModule.successMessage = response.data.success;
+                            groupManagerModule.successMessage = JSON.parse(response.data.success);
                             groupManagerModule.getAllGroups();
                         }
                     } else {
@@ -224,7 +229,7 @@ var groupManagerModule = new Vue({
             groupManagerModule.sessionUser.userId = "";
         },
         clearGroup: function () {
-            groupManagerModule.newGroup = {id_user: "", title: "", imageLink: "", action: ""};
+            groupManagerModule.newGroup = {id: "", id_user: "", title: "", imageLink: "", action: ""};
         }
     }
 });

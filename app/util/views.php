@@ -13,3 +13,9 @@ $excludesForLoggedIn = array(
     'login',
     'registration'
 );
+
+$excludesForLoggedOut = array(
+    'replaceGroup',
+    'saveGroup',
+    'logout'
+);

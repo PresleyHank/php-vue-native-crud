@@ -69,11 +69,11 @@
         <h1 class="fleft">List of groups</h1>
         <button class="fright addNew" @click="showingAddModal = true;">Add new group</button>
         <div class="clear"></div>
-        <p class="errorMessage" v-if="errorMessage">
-            {{errorMessage}}
+        <p class="errorMessage" v-if="errorMessage" v-for="error in errorMessage">
+            {{error}}
         </p>
-        <p class="successMessage" v-if="successMessage">
-            {{successMessage}}
+        <p class="successMessage" v-if="successMessage" v-for="success in successMessage">
+            {{success}}
         </p>
         <hr>
         <table class="list">
